@@ -8,7 +8,8 @@ const app = express();
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 
-const { NOT_FOUND_ERROR } = require('./utils/constants');
+// const { NOT_FOUND_ERROR } = require('./utils/constants');
+const NOT_FOUND_ERROR = 404;
 
 app.use((req, res, next) => {
   req.user = {
