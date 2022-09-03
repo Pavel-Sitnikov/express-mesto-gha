@@ -13,9 +13,9 @@
 [![Tests for sprint 14](https://github.com/${Pavel-Sitnikov}/${express-mesto-gha}/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/${Pavel-Sitnikov}/${express-mesto-gha}/actions/workflows/tests-14-sprint.yml)
 ```
 
-## Ссылка не репозиторий
+## Ссылка на репозиторий
 
-(https://github.com/Pavel-Sitnikov/express-mesto-gha)
+https://github.com/Pavel-Sitnikov/express-mesto-gha
 ## Директории
 
 `/routes` — папка с файлами роутера  
