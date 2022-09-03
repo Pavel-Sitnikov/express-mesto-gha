@@ -17,9 +17,9 @@ const getUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  const { id } = req.params;
+  const { userId } = req.params;
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
     }
