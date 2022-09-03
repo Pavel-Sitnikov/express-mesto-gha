@@ -12,7 +12,7 @@ const getUsers = async (req, res) => {
     const users = await User.find({});
     return res.status(STATUS_OK).send(users);
   } catch (err) {
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -28,7 +28,7 @@ const getUserById = async (req, res) => {
     if (err.name === 'CastError') {
       return res.status(BAD_REQUEST_ERROR).send({ message: 'Невалидный id пользователя' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -41,7 +41,7 @@ const createUser = async (req, res) => {
     if (err.name === 'ValidationError') {
       return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -62,7 +62,7 @@ const editProfile = async (req, res) => {
     if (err.name === 'ValidationError') {
       return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -83,7 +83,7 @@ const editAvatar = async (req, res) => {
     if (err.name === 'ValidationError') {
       return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 

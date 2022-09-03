@@ -12,7 +12,7 @@ const getCards = async (req, res) => {
     const cards = await Card.find({});
     return res.status(STATUS_OK).send(cards);
   } catch (err) {
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -26,11 +26,11 @@ const createCard = async (req, res) => {
     if (err.name === 'ValidationError') {
       return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при создании карточки' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
-const deleteCardbyId = async (req, res) => {
+const deleteCardById = async (req, res) => {
   const { id } = req.params;
   try {
     const card = await Card.findByIdAndRemove(id);
@@ -42,7 +42,7 @@ const deleteCardbyId = async (req, res) => {
     if (err.name === 'CastError') {
       return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные для удаления карточки' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -62,7 +62,7 @@ const likeCard = async (req, res) => {
     if (err.name === 'CastError') {
       return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные для постановки лайка' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -82,14 +82,14 @@ const dislikeCard = async (req, res) => {
     if (err.name === 'CastError') {
       return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные для снятии лайка' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
 module.exports = {
   getCards,
   createCard,
-  deleteCardbyId,
+  deleteCardById,
   likeCard,
   dislikeCard,
 };
