@@ -1,9 +1,11 @@
 const Card = require('../models/card');
 
-const BAD_REQUEST_ERROR = 400;
-const NOT_FOUND_ERROR = 404;
-const INTERNAL_SERVER_ERROR = 500;
-const STATUS_OK = 200;
+const {
+  BAD_REQUEST_ERROR,
+  NOT_FOUND_ERROR,
+  INTERNAL_SERVER_ERROR,
+  STATUS_OK,
+} = require('../utils/constants');
 
 const getCards = async (req, res) => {
   try {
@@ -29,9 +31,9 @@ const createCard = async (req, res) => {
 };
 
 const deleteCardById = async (req, res) => {
-  const { id } = req.params;
+  const { cardId } = req.params;
   try {
-    const card = await Card.findByIdAndRemove(id);
+    const card = await Card.findByIdAndRemove(cardId);
     if (!card) {
       return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
     }
@@ -45,10 +47,10 @@ const deleteCardById = async (req, res) => {
 };
 
 const likeCard = async (req, res) => {
-  const { id } = req.params;
+  const { cardId } = req.params;
   try {
     const card = await Card.findByIdAndUpdate(
-      id,
+      cardId,
       { $addToSet: { likes: req.user._id } },
       { new: true, runValidators: true },
     );
@@ -65,10 +67,10 @@ const likeCard = async (req, res) => {
 };
 
 const dislikeCard = async (req, res) => {
-  const { id } = req.params;
+  const { cardId } = req.params;
   try {
     const card = await Card.findByIdAndRemove(
-      id,
+      cardId,
       { $pull: { likes: req.user._id } },
       { new: true },
     );
