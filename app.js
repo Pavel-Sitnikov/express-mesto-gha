@@ -3,9 +3,6 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 
-const { PORT = 3000 } = process.env;
-const app = express();
-
 const { login, createUser } = require('./controllers/users');
 
 const regex = require('./utils/validateUrl');
@@ -16,6 +13,9 @@ const NotFoundError = require('./errors/NotFoundError');
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+
+const { PORT = 3000 } = process.env;
+const app = express();
 
 app.use(cookieParser());
 
