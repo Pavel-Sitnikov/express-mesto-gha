@@ -69,13 +69,14 @@ const createUser = async (req, res, next) => {
       email,
       password: hashPassword,
     });
+    delete user.password;
     return res.status(CREATED).send(user);
   } catch (err) {
-    if (err.code === 11000) {
-      return next(new ConflictError('Email уже занят'));
-    }
     if (err.name === 'ValidationError') {
       return next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
+    }
+    if (err.code === 11000) {
+      return next(new ConflictError('Email уже занят'));
     }
     return next(err);
   }
