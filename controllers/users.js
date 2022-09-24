@@ -61,6 +61,10 @@ const createUser = async (req, res, next) => {
       password,
     } = req.body;
   try {
+    const emailCondidate = await User.findOne({ email });
+    if (emailCondidate) {
+      throw new ConflictError('Email уже занят');
+    }
     const hashPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       name,
@@ -69,14 +73,14 @@ const createUser = async (req, res, next) => {
       email,
       password: hashPassword,
     });
-    return res.status(CREATED).send(user);
+    return res.status(CREATED).send({ user });
   } catch (err) {
     if (err.name === 'ValidationError') {
       return next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
     }
-    if (err.code === 11000) {
-      return next(new ConflictError('Email уже занят'));
-    }
+    // if (err.code === 11000) {
+    //   return next(new ConflictError('Email уже занят'));
+    // }
     return next(err);
   }
 };
