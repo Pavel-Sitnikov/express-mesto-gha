@@ -13,6 +13,37 @@ const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
+const createUser = async (req, res, next) => {
+  const
+    {
+      name,
+      about,
+      avatar,
+      email,
+      password,
+    } = req.body;
+  try {
+    const emailCondidate = await User.findOne({ email });
+    if (emailCondidate) {
+      return next(new ConflictError('Email уже занят'));
+    }
+    const hashPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hashPassword,
+    });
+    return res.status(CREATED).send({ user });
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      return next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
+    }
+    return next(err);
+  }
+};
+
 const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
@@ -47,40 +78,6 @@ const getUserInfo = async (res, req, next) => {
     }
     return res.status(STATUS_OK).send(user);
   } catch (err) {
-    return next(err);
-  }
-};
-
-const createUser = async (req, res, next) => {
-  const
-    {
-      name,
-      about,
-      avatar,
-      email,
-      password,
-    } = req.body;
-  try {
-    const emailCondidate = await User.findOne({ email });
-    if (emailCondidate) {
-      throw new ConflictError('Email уже занят');
-    }
-    const hashPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      name,
-      about,
-      avatar,
-      email,
-      password: hashPassword,
-    });
-    return res.status(CREATED).send({ user });
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
-    }
-    // if (err.code === 11000) {
-    //   return next(new ConflictError('Email уже занят'));
-    // }
     return next(err);
   }
 };
