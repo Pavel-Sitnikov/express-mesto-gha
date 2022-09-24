@@ -19,13 +19,6 @@ const app = express();
 
 app.use(cookieParser());
 
-app.post('/signin', express.json(), celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
-
 app.post('/signup', express.json(), celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -35,6 +28,13 @@ app.post('/signup', express.json(), celebrate({
     password: Joi.string().required(),
   }),
 }), createUser);
+
+app.post('/signin', express.json(), celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
 
 app.use(auth);
 
