@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 
-const { CREATED } = require('../utils/constants');
+const CREATED = require('../utils/constants');
 
 const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
