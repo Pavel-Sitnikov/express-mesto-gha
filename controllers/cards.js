@@ -40,7 +40,7 @@ const deleteCardById = async (req, res, next) => {
     if (id !== card.owner.toString()) {
       return next(new ForbiddenError('Нет прав на удаление карточки'));
     }
-    await Card.remove();
+    await card.remove();
     return res.send(card);
   } catch (err) {
     if (err.name === 'CastError') {
