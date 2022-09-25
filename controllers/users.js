@@ -3,10 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-const {
-  STATUS_OK,
-  CREATED,
-} = require('../utils/constants');
+const CREATED = require('../utils/constants');
 
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
@@ -16,7 +13,7 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
-    return res.status(STATUS_OK).send(users);
+    return res.send(users);
   } catch (err) {
     return next(err);
   }
@@ -29,7 +26,7 @@ const getUserById = async (req, res, next) => {
     if (!user) {
       return next(new NotFoundError('Пользователь не найден'));
     }
-    return res.status(STATUS_OK).send(user);
+    return res.send(user);
   } catch (err) {
     if (err.name === 'CastError') {
       return next(new BadRequestError('Переданы некорректные данные пользователя'));
@@ -45,7 +42,7 @@ const getUserInfo = async (req, res, next) => {
     if (!user) {
       return next(new NotFoundError('Пользователь не найден'));
     }
-    return res.status(STATUS_OK).send(user);
+    return res.send(user);
   } catch (err) {
     return next(err);
   }
@@ -61,10 +58,6 @@ const createUser = async (req, res, next) => {
       password,
     } = req.body;
   try {
-    const emailCondidate = await User.findOne({ email });
-    if (emailCondidate) {
-      return next(new ConflictError('Email уже занят'));
-    }
     const hashPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       name,
@@ -75,6 +68,9 @@ const createUser = async (req, res, next) => {
     });
     return res.status(CREATED).send({ user });
   } catch (err) {
+    if (err.code === 11000) {
+      return next(new ConflictError('Email уже занят'));
+    }
     if (err.name === 'ValidationError') {
       return next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
     }
@@ -94,7 +90,7 @@ const editProfile = async (req, res, next) => {
     if (!user) {
       return next(new NotFoundError('Пользователь не найден'));
     }
-    return res.status(STATUS_OK).send(user);
+    return res.send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
       return next(new BadRequestError('Переданы некорректные данные пользователя'));
@@ -115,7 +111,7 @@ const editAvatar = async (req, res, next) => {
     if (!user) {
       return next(new NotFoundError('Пользователь не найден'));
     }
-    return res.status(STATUS_OK).send(user);
+    return res.send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
       return next(new BadRequestError('Переданы некорректные данные при обновлении аватара'));
@@ -144,7 +140,7 @@ const login = async (req, res, next) => {
       sameSite: true,
     });
 
-    return res.status(STATUS_OK).send(user);
+    return res.send(user);
   } catch (err) {
     return next(err);
   }

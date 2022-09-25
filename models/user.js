@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    // db.members.createIndex( { "user_id": 1 })
     unique: true,
     validate: {
       validator(e) {

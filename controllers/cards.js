@@ -1,9 +1,6 @@
 const Card = require('../models/card');
 
-const {
-  STATUS_OK,
-  CREATED,
-} = require('../utils/constants');
+const { CREATED } = require('../utils/constants');
 
 const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
@@ -12,7 +9,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
-    return res.status(STATUS_OK).send(cards);
+    return res.send(cards);
   } catch (err) {
     return next(err);
   }
@@ -36,14 +33,15 @@ const deleteCardById = async (req, res, next) => {
   const { cardId } = req.params;
   const id = req.user._id;
   try {
-    const card = await Card.findByIdAndDelete(cardId);
+    const card = await Card.findById(cardId);
     if (!card) {
       return next(new NotFoundError('Карточка не найдена'));
     }
     if (id !== card.owner.toString()) {
       return next(new ForbiddenError('Нет прав на удаление карточки'));
     }
-    return res.status(STATUS_OK).send(card);
+    await Card.remove();
+    return res.send(card);
   } catch (err) {
     if (err.name === 'CastError') {
       return next(new BadRequestError('Переданы некорректные данные для удаления карточки'));
@@ -63,7 +61,7 @@ const likeCard = async (req, res, next) => {
     if (!card) {
       return next(new NotFoundError('Карточка не найдена'));
     }
-    return res.status(STATUS_OK).send(card);
+    return res.send(card);
   } catch (err) {
     if (err.name === 'CastError') {
       return next(new BadRequestError('Переданы некорректные данные для установки лайка'));
@@ -83,7 +81,7 @@ const dislikeCard = async (req, res, next) => {
     if (!card) {
       return next(new NotFoundError('Карточка не найдена'));
     }
-    return res.status(STATUS_OK).send(card);
+    return res.send(card);
   } catch (err) {
     if (err.name === 'CastError') {
       return next(new BadRequestError('Переданы некорректные данные для снятия лайка'));
