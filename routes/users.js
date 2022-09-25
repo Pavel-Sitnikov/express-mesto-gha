@@ -6,10 +6,10 @@ const regex = require('../utils/validateUrl');
 
 const {
   getUsers,
+  getUserInfo,
   getUserById,
   editProfile,
   editAvatar,
-  getUserInfo,
 } = require('../controllers/users');
 
 router.get('/users', express.json(), getUsers);

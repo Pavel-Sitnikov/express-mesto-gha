@@ -13,6 +13,44 @@ const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
+const getUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    return res.status(STATUS_OK).send(users);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const getUserById = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new NotFoundError('Пользователь не найден'));
+    }
+    return res.status(STATUS_OK).send(user);
+  } catch (err) {
+    if (err.name === 'CastError') {
+      return next(new BadRequestError('Переданы некорректные данные пользователя'));
+    }
+    return next(err);
+  }
+};
+
+const getUserInfo = async (req, res, next) => {
+  const userId = req.user._id;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new NotFoundError('Пользователь не найден'));
+    }
+    return res.status(STATUS_OK).send(user);
+  } catch (err) {
+    return next(err);
+  }
+};
+
 const createUser = async (req, res, next) => {
   const
     {
@@ -40,44 +78,6 @@ const createUser = async (req, res, next) => {
     if (err.name === 'ValidationError') {
       return next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
     }
-    return next(err);
-  }
-};
-
-const getUsers = async (req, res, next) => {
-  try {
-    const users = await User.find({});
-    return res.status(STATUS_OK).send(users);
-  } catch (err) {
-    return next(err);
-  }
-};
-
-const getUserById = async (req, res, next) => {
-  const { userId } = req.params;
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      return next(new NotFoundError('Пользователь не найден'));
-    }
-    return res.status(STATUS_OK).send(user);
-  } catch (err) {
-    if (err.name === 'CastError') {
-      return next(new BadRequestError('Переданы некорректные данные пользователя'));
-    }
-    return next(err);
-  }
-};
-
-const getUserInfo = async (res, req, next) => {
-  const id = req.user._id;
-  try {
-    const user = await User.findById(id);
-    if (!user) {
-      return next(new NotFoundError('Пользователь не найден'));
-    }
-    return res.status(STATUS_OK).send(user);
-  } catch (err) {
     return next(err);
   }
 };
@@ -152,10 +152,10 @@ const login = async (req, res, next) => {
 
 module.exports = {
   getUsers,
+  getUserInfo,
   getUserById,
   createUser,
   editProfile,
   editAvatar,
   login,
-  getUserInfo,
 };
